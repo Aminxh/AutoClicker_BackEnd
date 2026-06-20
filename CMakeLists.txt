@@ -1,0 +1,55 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(AC_Runner VERSION 0.1 LANGUAGES CXX)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(Qt6 REQUIRED COMPONENTS Core Quick)
+
+file(GLOB_RECURSE HFiles RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+file(GLOB_RECURSE CppFiles RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE JsonFiles RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include/*.json)
+# file(GLOB_RECURSE UiFiles RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/Model*.ui)
+# file(GLOB_RECURSE QmlFiles RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml)
+
+set(${PROJECT_NAME}_HDRS
+    ${HFiles}
+)
+
+set(${PROJECT_NAME}_SRCS
+    ${CppFiles}
+    ${UiFiles}
+)
+
+set(${PROJECT_NAME}_JSONS
+    ${JsonFiles}
+)
+
+# set(${PROJECT_NAME}_QMLS
+#     ${QmlFiles}
+# )
+
+set(PROJECT_SOURCES
+        main.cpp
+        ${HEADER_FILES}
+        ${SOURCE_FILES}
+        ${RESOURCE_FILES}
+)
+
+add_executable(${PROJECT_NAME} src/main.cpp ${${PROJECT_NAME}_JSONS} ${${PROJECT_NAME}_SRCS} ${${PROJECT_NAME}_HDRS})
+
+target_link_libraries(AC_Runner PRIVATE
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Quick
+)
+
+if(WIN32)
+    target_link_libraries(AC_Runner PRIVATE User32)
+endif()
